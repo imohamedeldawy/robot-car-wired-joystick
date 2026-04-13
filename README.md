@@ -1,2 +1,24 @@
-# robot-car-wired-joystick
-Embedded systems project using ATmega32 to control a robot car via analog joystick with custom drivers (DIO, ADC) and layered architecture (MCAL, HAL, APP).
+# Robot Car with Wired Joystick Controller
+
+## Overview
+This project implements a robot car controlled using an analog joystick and ATmega32 microcontroller.
+
+## Features
+- Custom DIO and ADC drivers
+- Layered architecture (MCAL, HAL, APP)
+- Real-time joystick control
+- Battery monitoring system with LED warning
+
+## Hardware
+- ATmega32
+- L298N Motor Driver
+- Analog Joystick
+- DC Motors
+
+## Architecture
+- MCAL: DIO, ADC
+- HAL: MOTOR, JOYSTICK, BATTERY
+- APP: System logic
+
+## Author
+Mohamed Aldawy
