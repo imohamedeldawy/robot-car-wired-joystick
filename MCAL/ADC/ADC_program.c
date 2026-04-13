@@ -1,0 +1,42 @@
+#include "STD_TYPES.h"
+#include "BIT_MATH.h"
+#include "ADC_interface.h"
+#include "ADC_register.h"
+
+void ADC_Init (void){
+	SET_BIT(ADCSRA,ADEN);
+
+
+	SET_BIT(ADCSRA,ADPS0);
+	SET_BIT(ADCSRA,ADPS1);
+	SET_BIT(ADCSRA,ADPS2);
+
+
+	CLR_BIT(ADMUX,REFS1);
+	SET_BIT(ADMUX,REFS0);
+
+
+	CLR_BIT(ADMUX,ADLAR);
+}
+
+u16 ADC_Read(u8 Channel)
+{
+    /* Select Channel */
+    ADMUX = (ADMUX & 0b11100000) | (Channel & 0x07);
+
+    /* Start Conversion */
+    SET_BIT(ADCSRA, ADSC);
+
+    /* Wait until conversion complete */
+    while (!GET_BIT(ADCSRA, ADIF));
+
+    /* Clear flag */
+    SET_BIT(ADCSRA, ADIF);
+
+    /* Return result */
+    return ADC_Reg;
+}
+u32 Mapping (u32 Range1_max,u32 Range1_min,u32 Range2_max,u32 Range2_min,u32 Range1_reading){
+
+	return (Range2_max-((Range2_max-Range2_min)*(Range1_max-Range1_reading)/(Range1_max-Range1_min)));
+}
