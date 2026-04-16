@@ -1,7 +1,7 @@
-#include "STD_TYPES.h"
+#include "../../LIB/STD_TYPES.h"
 
-#include "DIO_interface.h"
-#include "ADC_interface.h"
+#include "../../MCAL/DIO/DIO_interface.h"
+#include "../../MCAL/ADC/ADC_interface.h"
 
 #include "BATTERY_interface.h"
 #include "BATTERY_private.h"
