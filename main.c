@@ -1,9 +1,8 @@
-#include "STD_TYPES.h"
+#include "LIB/STD_TYPES.h"
 
-#include "MOTOR_interface.h"
-#include "JOYSTICK_interface.h"
-#include "BATTERY_interface.h"
-
+#include "HAL/MOTOR_interface.h"
+#include "HAL/JOYSTICK_interface.h"
+#include "HAL/BATTERY_interface.h"
 int main(void)
 {
     u8 Local_u8Direction;
