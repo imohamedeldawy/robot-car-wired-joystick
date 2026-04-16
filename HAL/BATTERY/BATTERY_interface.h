@@ -1,11 +1,10 @@
-#ifndef BATTERY_INTERFACE_H_
-#define BATTERY_INTERFACE_H_
+#ifndef BATTERY_INTERFACE_H
+#define BATTERY_INTERFACE_H
 
 #include "STD_TYPES.h"
 
-/* Functions */
 void BATTERY_Init(void);
-u16 BATTERY_GetVoltage(void);
-void BATTERY_Check(void);
+u16 BATTERY_ReadVoltage(void);
+void BATTERY_CheckStatus(void);
 
-#endif /* BATTERY_INTERFACE_H_ */
+#endif
