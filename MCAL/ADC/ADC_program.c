@@ -1,42 +1,76 @@
-#include "STD_TYPES.h"
-#include "BIT_MATH.h"
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <util/atomic.h>
+
 #include "ADC_interface.h"
-#include "ADC_register.h"
+#include "ADC_private.h"
+#include "ADC_config.h"
 
-void ADC_Init (void){
-	SET_BIT(ADCSRA,ADEN);
+static volatile uint8_t adc_current = 0;
+static volatile uint8_t adc_next = 0;
 
+static volatile uint16_t adc_channels[ADC_N] = {0};
 
-	SET_BIT(ADCSRA,ADPS0);
-	SET_BIT(ADCSRA,ADPS1);
-	SET_BIT(ADCSRA,ADPS2);
-
-
-	CLR_BIT(ADMUX,REFS1);
-	SET_BIT(ADMUX,REFS0);
-
-
-	CLR_BIT(ADMUX,ADLAR);
-}
-
-u16 ADC_Read(u8 Channel)
+void ADC_Init(void)
 {
-    /* Select Channel */
-    ADMUX = (ADMUX & 0b11100000) | (Channel & 0x07);
+    ADMUX |= (1 << REFS0);
 
-    /* Start Conversion */
-    SET_BIT(ADCSRA, ADSC);
-
-    /* Wait until conversion complete */
-    while (!GET_BIT(ADCSRA, ADIF));
-
-    /* Clear flag */
-    SET_BIT(ADCSRA, ADIF);
-
-    /* Return result */
-    return ADC_Reg;
+    ADCSRA |= (1 << ADEN)
+           |  (1 << ADSC)
+           |  (1 << ADATE)
+           |  (1 << ADIE)
+           |  (ADPS2_VALUE << ADPS2)
+           |  (ADPS1_VALUE << ADPS1)
+           |  (ADPS0_VALUE << ADPS0);
 }
-u32 Mapping (u32 Range1_max,u32 Range1_min,u32 Range2_max,u32 Range2_min,u32 Range1_reading){
 
-	return (Range2_max-((Range2_max-Range2_min)*(Range1_max-Range1_reading)/(Range1_max-Range1_min)));
+uint16_t ADC_Get(uint8_t channel)
+{
+    uint16_t value;
+
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+    {
+        value = adc_channels[channel];
+    }
+
+    return value;
+}
+
+double ADC_GetScaled(uint8_t channel)
+{
+    return (double)ADC_Get(channel) / ADC_TOP;
+}
+
+void ADC_GetAll(uint16_t *channels)
+{
+    uint8_t i;
+
+    for(i = 0; i < ADC_N; i++)
+    {
+        channels[i] = ADC_Get(i);
+    }
+}
+
+void ADC_GetAllScaled(double *channels)
+{
+    uint8_t i;
+
+    for(i = 0; i < ADC_N; i++)
+    {
+        channels[i] = ADC_GetScaled(i);
+    }
+}
+
+ISR(ADC_vect)
+{
+    adc_channels[adc_current] = ADC;
+
+    adc_current = adc_next;
+
+    adc_next++;
+
+    if(adc_next >= ADC_N)
+        adc_next = 0;
+
+    ADMUX = (ADMUX & 0xE0) | adc_next;
 }
