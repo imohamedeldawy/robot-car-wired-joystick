@@ -1,35 +1,35 @@
 #include "STD_TYPES.h"
 
-#include "ADC_interface.h"
 #include "DIO_interface.h"
+#include "ADC_interface.h"
 
 #include "BATTERY_interface.h"
+#include "BATTERY_private.h"
 #include "BATTERY_config.h"
 
 void BATTERY_Init(void)
 {
-    /* Set LED pin as output */
-    DIO_SetPinDirection(BATTERY_LED_PORT, BATTERY_LED_PIN, PIN_OUTPUT);
+    DIO_SetPinDirection(BATTERY_LED_PORT, BATTERY_LED_PIN, DIO_OUTPUT);
+    DIO_SetPinValue(BATTERY_LED_PORT, BATTERY_LED_PIN, DIO_LOW);
 }
 
-u16 BATTERY_GetVoltage(void)
+u16 BATTERY_ReadVoltage(void)
 {
-    /* Read ADC value */
-    return ADC_Read(BATTERY_CHANNEL);
+    return ADC_ReadChannel(BATTERY_ADC_CHANNEL);
 }
 
-void BATTERY_Check(void)
+void BATTERY_CheckStatus(void)
 {
-    u16 value = BATTERY_GetVoltage();
+    u16 Local_u16Value;
 
-    if (value < BATTERY_LOW_THRESHOLD)
+    Local_u16Value = BATTERY_ReadVoltage();
+
+    if(Local_u16Value < BATTERY_LOW_THRESHOLD)
     {
-        /* Turn ON LED */
-        DIO_SetPinValue(BATTERY_LED_PORT, BATTERY_LED_PIN, PIN_HIGH);
+        DIO_SetPinValue(BATTERY_LED_PORT, BATTERY_LED_PIN, DIO_HIGH);
     }
     else
     {
-        /* Turn OFF LED */
-        DIO_SetPinValue(BATTERY_LED_PORT, BATTERY_LED_PIN, PIN_LOW);
+        DIO_SetPinValue(BATTERY_LED_PORT, BATTERY_LED_PIN, DIO_LOW);
     }
 }
