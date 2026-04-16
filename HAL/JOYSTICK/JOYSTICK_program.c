@@ -1,43 +1,42 @@
-﻿#include "STD_TYPES.h"
+#include "STD_TYPES.h"
 
 #include "ADC_interface.h"
 
 #include "JOYSTICK_interface.h"
+#include "JOYSTICK_private.h"
 #include "JOYSTICK_config.h"
 
-/* Optional init */
 void JOYSTICK_Init(void)
 {
-    /* لو عايز تخلي ADC init هنا بدل main */
     ADC_Init();
 }
 
-/* Get Direction */
 u8 JOYSTICK_GetDirection(void)
 {
-    u16 x = ADC_Read(JOY_X_CHANNEL);
-    u16 y = ADC_Read(JOY_Y_CHANNEL);
+    u16 Local_u16X;
+    u16 Local_u16Y;
 
-    /* Check Y axis first (Forward / Backward) */
-    if (y > JOY_UP_THRESHOLD)
-    {
-        return JOY_FORWARD;
-    }
-    else if (y < JOY_DOWN_THRESHOLD)
-    {
-        return JOY_BACKWARD;
-    }
+    Local_u16X = ADC_ReadChannel(JOYSTICK_X_CHANNEL);
+    Local_u16Y = ADC_ReadChannel(JOYSTICK_Y_CHANNEL);
 
-    /* Check X axis (Left / Right) */
-    if (x > JOY_RIGHT_THRESHOLD)
+    if(Local_u16Y > JOYSTICK_HIGH_LIMIT)
     {
-        return JOY_RIGHT;
+        return JOYSTICK_FORWARD;
     }
-    else if (x < JOY_LEFT_THRESHOLD)
+    else if(Local_u16Y < JOYSTICK_LOW_LIMIT)
     {
-        return JOY_LEFT;
+        return JOYSTICK_BACKWARD;
     }
-
-    /* Otherwise stop */
-    return JOY_STOP;
+    else if(Local_u16X > JOYSTICK_HIGH_LIMIT)
+    {
+        return JOYSTICK_RIGHT;
+    }
+    else if(Local_u16X < JOYSTICK_LOW_LIMIT)
+    {
+        return JOYSTICK_LEFT;
+    }
+    else
+    {
+        return JOYSTICK_STOP;
+    }
 }
