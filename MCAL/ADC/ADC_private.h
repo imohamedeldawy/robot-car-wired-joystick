@@ -1,47 +1,32 @@
 #ifndef ADC_PRIVATE_H
 #define ADC_PRIVATE_H
 
-#ifndef F_CPU
-#define F_CPU 16000000UL
-#endif
+#define ADMUX   *((volatile u8*)0x7C)
+#define ADCSRA  *((volatile u8*)0x7A)
+#define ADCSRB  *((volatile u8*)0x7B)
+#define ADCL    *((volatile u8*)0x78)
+#define ADCH    *((volatile u8*)0x79)
+#define DIDR0   *((volatile u8*)0x7E)
 
-#define ADC_FREQUENCY_MIN   50000UL
-#define ADC_FREQUENCY_MAX   200000UL
+#define ADC     *((volatile u16*)0x78)
 
-#if F_CPU/2 <= ADC_FREQUENCY_MAX && F_CPU/2 >= ADC_FREQUENCY_MIN
-    #define ADPS0_VALUE 0
-    #define ADPS1_VALUE 0
-    #define ADPS2_VALUE 0
+/* ADMUX Bits */
+#define REFS1   7
+#define REFS0   6
+#define ADLAR   5
+#define MUX0    0
+#define MUX1    1
+#define MUX2    2
+#define MUX3    3
 
-#elif F_CPU/4 <= ADC_FREQUENCY_MAX && F_CPU/4 >= ADC_FREQUENCY_MIN
-    #define ADPS0_VALUE 0
-    #define ADPS1_VALUE 1
-    #define ADPS2_VALUE 0
-
-#elif F_CPU/8 <= ADC_FREQUENCY_MAX && F_CPU/8 >= ADC_FREQUENCY_MIN
-    #define ADPS0_VALUE 1
-    #define ADPS1_VALUE 1
-    #define ADPS2_VALUE 0
-
-#elif F_CPU/16 <= ADC_FREQUENCY_MAX && F_CPU/16 >= ADC_FREQUENCY_MIN
-    #define ADPS0_VALUE 0
-    #define ADPS1_VALUE 0
-    #define ADPS2_VALUE 1
-
-#elif F_CPU/32 <= ADC_FREQUENCY_MAX && F_CPU/32 >= ADC_FREQUENCY_MIN
-    #define ADPS0_VALUE 1
-    #define ADPS1_VALUE 0
-    #define ADPS2_VALUE 1
-
-#elif F_CPU/64 <= ADC_FREQUENCY_MAX && F_CPU/64 >= ADC_FREQUENCY_MIN
-    #define ADPS0_VALUE 0
-    #define ADPS1_VALUE 1
-    #define ADPS2_VALUE 1
-
-#else
-    #define ADPS0_VALUE 1
-    #define ADPS1_VALUE 1
-    #define ADPS2_VALUE 1
-#endif
+/* ADCSRA Bits */
+#define ADEN    7
+#define ADSC    6
+#define ADATE   5
+#define ADIF    4
+#define ADIE    3
+#define ADPS2   2
+#define ADPS1   1
+#define ADPS0   0
 
 #endif
