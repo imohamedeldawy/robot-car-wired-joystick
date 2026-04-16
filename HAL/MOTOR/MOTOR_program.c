@@ -1,6 +1,6 @@
-#include "STD_TYPES.h"
+#include "../../LIB/STD_TYPES.h"
 
-#include "DIO_interface.h"
+#include "../../MCAL/DIO/DIO_interface.h"
 
 #include "MOTOR_interface.h"
 #include "MOTOR_private.h"
