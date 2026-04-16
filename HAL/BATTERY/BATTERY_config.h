@@ -1,14 +1,14 @@
-#ifndef BATTERY_CONFIG_H_
-#define BATTERY_CONFIG_H_
+#ifndef BATTERY_CONFIG_H
+#define BATTERY_CONFIG_H
 
-/* ADC Channel */
-#define BATTERY_CHANNEL   Channel_A2
+/* Battery sense connected to ADC channel */
+#define BATTERY_ADC_CHANNEL     2
 
-/* Low voltage threshold (ADC value) */
-#define BATTERY_LOW_THRESHOLD   500
+/* Low battery threshold (ADC reading) */
+#define BATTERY_LOW_THRESHOLD   600
 
-/* LED Pin */
-#define BATTERY_LED_PORT   PORT_B
-#define BATTERY_LED_PIN    PIN_0
+/* Warning LED */
+#define BATTERY_LED_PORT        DIO_PORTB
+#define BATTERY_LED_PIN         DIO_PIN0
 
-#endif /* BATTERY_CONFIG_H_ */
+#endif
