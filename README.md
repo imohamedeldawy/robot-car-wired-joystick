@@ -5,7 +5,7 @@ This project implements a robot car controlled using an analog joystick and ATme
 
 ## Features
 - Custom DIO and ADC drivers
-- Layered architecture (MCAL, HAL, APP)
+- Layered architecture (MCAL, HAL)
 - Real-time joystick control
 - Battery monitoring system with LED warning
 
@@ -18,7 +18,6 @@ This project implements a robot car controlled using an analog joystick and ATme
 ## Architecture
 - MCAL: DIO, ADC
 - HAL: MOTOR, JOYSTICK, BATTERY
-- APP: System logic
-
+- main.c
 ## Author
 Mohamed Aldawy
