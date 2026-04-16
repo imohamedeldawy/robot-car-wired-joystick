@@ -1,6 +1,6 @@
-#include "STD_TYPES.h"
+#include "../../LIB/STD_TYPES.h"
 
-#include "ADC_interface.h"
+#include "../../MCAL/ADC/ADC_interface.h"
 
 #include "JOYSTICK_interface.h"
 #include "JOYSTICK_private.h"
