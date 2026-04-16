@@ -1,76 +1,49 @@
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <util/atomic.h>
+#include "STD_TYPES.h"
+#include "BIT_MATH.h"
 
 #include "ADC_interface.h"
 #include "ADC_private.h"
 #include "ADC_config.h"
 
-static volatile uint8_t adc_current = 0;
-static volatile uint8_t adc_next = 0;
-
-static volatile uint16_t adc_channels[ADC_N] = {0};
-
 void ADC_Init(void)
 {
-    ADMUX |= (1 << REFS0);
+    /* Select AVCC as reference */
+    SET_BIT(ADMUX, REFS0);
+    CLR_BIT(ADMUX, REFS1);
 
-    ADCSRA |= (1 << ADEN)
-           |  (1 << ADSC)
-           |  (1 << ADATE)
-           |  (1 << ADIE)
-           |  (ADPS2_VALUE << ADPS2)
-           |  (ADPS1_VALUE << ADPS1)
-           |  (ADPS0_VALUE << ADPS0);
+    /* Right Adjust Result */
+    CLR_BIT(ADMUX, ADLAR);
+
+    /* Prescaler = 128 */
+    SET_BIT(ADCSRA, ADPS0);
+    SET_BIT(ADCSRA, ADPS1);
+    SET_BIT(ADCSRA, ADPS2);
+
+    /* Enable ADC */
+    SET_BIT(ADCSRA, ADEN);
 }
 
-uint16_t ADC_Get(uint8_t channel)
+u16 ADC_ReadChannel(u8 Copy_u8Channel)
 {
-    uint16_t value;
+    u16 Local_u16Result;
 
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
-    {
-        value = adc_channels[channel];
-    }
+    /* Clear old channel selection */
+    ADMUX &= 0xF0;
 
-    return value;
-}
+    /* Select channel */
+    ADMUX |= Copy_u8Channel;
 
-double ADC_GetScaled(uint8_t channel)
-{
-    return (double)ADC_Get(channel) / ADC_TOP;
-}
+    /* Start Conversion */
+    SET_BIT(ADCSRA, ADSC);
 
-void ADC_GetAll(uint16_t *channels)
-{
-    uint8_t i;
+    /* Wait until conversion complete */
+    while (GET_BIT(ADCSRA, ADIF) == 0);
 
-    for(i = 0; i < ADC_N; i++)
-    {
-        channels[i] = ADC_Get(i);
-    }
-}
+    /* Clear flag by writing 1 */
+    SET_BIT(ADCSRA, ADIF);
 
-void ADC_GetAllScaled(double *channels)
-{
-    uint8_t i;
+    /* Read result */
+    Local_u16Result = ADC;
 
-    for(i = 0; i < ADC_N; i++)
-    {
-        channels[i] = ADC_GetScaled(i);
-    }
-}
-
-ISR(ADC_vect)
-{
-    adc_channels[adc_current] = ADC;
-
-    adc_current = adc_next;
-
-    adc_next++;
-
-    if(adc_next >= ADC_N)
-        adc_next = 0;
-
-    ADMUX = (ADMUX & 0xE0) | adc_next;
+    return Local_u16Result;
 }
