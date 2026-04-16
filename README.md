@@ -10,7 +10,7 @@ This project implements a robot car controlled using an analog joystick and ATme
 - Battery monitoring system with LED warning
 
 ## Hardware
-- ATmega32
+- ATmega328P (Arduino Board)
 - L298N Motor Driver
 - Analog Joystick
 - DC Motors
