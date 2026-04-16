@@ -1,20 +1,18 @@
-﻿#ifndef MOTOR_CONFIG_H_
-#define MOTOR_CONFIG_H_
+#ifndef MOTOR_CONFIG_H
+#define MOTOR_CONFIG_H
 
-/* Motor Pins (L298N مثال) */
+/* Left Motor */
+#define MOTOR_L_IN1_PORT   DIO_PORTD
+#define MOTOR_L_IN1_PIN    DIO_PIN2
 
-/* Motor A */
-#define MOTOR_A_IN1_PORT   PORT_A
-#define MOTOR_A_IN1_PIN    PIN_0
+#define MOTOR_L_IN2_PORT   DIO_PORTD
+#define MOTOR_L_IN2_PIN    DIO_PIN3
 
-#define MOTOR_A_IN2_PORT   PORT_A
-#define MOTOR_A_IN2_PIN    PIN_1
+/* Right Motor */
+#define MOTOR_R_IN1_PORT   DIO_PORTD
+#define MOTOR_R_IN1_PIN    DIO_PIN4
 
-/* Motor B */
-#define MOTOR_B_IN3_PORT   PORT_A
-#define MOTOR_B_IN3_PIN    PIN_2
+#define MOTOR_R_IN2_PORT   DIO_PORTD
+#define MOTOR_R_IN2_PIN    DIO_PIN5
 
-#define MOTOR_B_IN4_PORT   PORT_A
-#define MOTOR_B_IN4_PIN    PIN_3
-
-#endif /* MOTOR_CONFIG_H_ */
+#endif
